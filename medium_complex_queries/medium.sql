@@ -248,5 +248,67 @@ select EmployeeID, EmployeeName, Salary, LEAD(Salary, 1) over (order by salary d
 from Employees
 
 
+--15. You have a Sales table that records monthly sales for multiple stores. Write a SQL query using LAG() to show the sales for the current month along with the previous month's sales for each store separately. If no previous month exists for a store, display NULL.
+/*
+CREATE TABLE Sales (
+    SaleID INT PRIMARY KEY,
+    StoreID INT,
+    MonthYear DATE,
+    SalesAmount DECIMAL(10, 2)
+);
 
+INSERT INTO Sales (SaleID, StoreID, MonthYear, SalesAmount)
+VALUES
+    (1, 1, '2024-01-01', 10000.00),
+    (2, 1, '2024-02-01', 15000.00),
+    (3, 1, '2024-03-01', 13000.00),
+    (4, 1, '2024-04-01', 17000.00),
+    (5, 1, '2024-05-01', 16000.00),
+    
+    (6, 2, '2024-01-01', 12000.00),
+    (7, 2, '2024-02-01', 14000.00),
+    (8, 2, '2024-03-01', 13500.00),
+    (9, 2, '2024-04-01', 18000.00),
+    (10, 2, '2024-05-01', 17500.00);
 
+SaleID	StoreID	MonthYear	SalesAmount	PreviousMonthSales
+1	    1	    2024-01-01	10000.00	NULL
+2	    1	    2024-02-01	15000.00	10000.00
+3	    1	    2024-03-01	13000.00	15000.00
+4	    1	    2024-04-01	17000.00	13000.00
+5	    1	    2024-05-01	16000.00	17000.00
+6	    2	    2024-01-01	12000.00	NULL
+7	    2	    2024-02-01	14000.00	12000.00
+8	    2	    2024-03-01	13500.00	14000.00
+9	    2	    2024-04-01	18000.00	13500.00
+10	    2	    2024-05-01	17500.00	18000.00
+*/
+
+select 
+    StoreID
+    ,MonthYear
+    ,SalesAmount
+    ,Lag(salesamount, 1) over (partition by StoreID order by MonthYear) PrevYearSales 
+from sales
+
+--16. Ranking methods, row_number(), rank() and dense_rank()
+
+SELECT 
+DepartmentID,
+Salary,
+ROW_NUMBER() over (partition by DepartmentID order by salary) as Row_num,
+Rank() over (partition by DepartmentID order by salary) as Rank,
+DENSE_RANK() over (partition by DepartmentID order by salary) as Dense_Rank
+FROM Employees 
+/*
+Dept    Salary      Row_num     Rank    dense_rank
+1	    60000.00	1	        1	    1
+2	    52000.00	1	        1	    1
+2	    70000.00	2	        2	    2
+2	    75000.00	3	        3	    3
+2	    95000.00	4	        4	    4
+2	    100000.00	5	        5	    5
+3	    50000.00	1	        1	    1
+3	    95000.00	2	        2	    2
+3	    350000.00	3	        3	    3
+*/
