@@ -63,3 +63,71 @@ CREATE TABLE [user]
 )
 
 --data insertion
+INSERT INTO country 
+VALUES('India')
+
+SELECT * FROM country
+
+--Apply unique constraint on country
+ALTER TABLE country
+ADD CONSTRAINT uk_country_name UNIQUE (name)
+
+INSERT INTO country 
+VALUES('India') --Violation of UNIQUE KEY constraint 'uk_country_name'. Cannot insert duplicate key in object 'dbo.country'. The duplicate key value is (India).
+
+--multi data insertion
+INSERT INTO country 
+VALUES 
+('India'),
+('Brazil'),
+('Russia'),
+('China'),
+('South Africa')
+
+SELECT * FROM country
+
+-- state insertion
+INSERT INTO STATE 
+VALUES ('Maharashtra', 1),
+('Goa', 1),
+('Kerala', 1),
+('Delhi', 1),
+('Hariyana', 1),
+('Uttar Pradesh', 1),
+('Uttarakhand', 1),
+('Andra Pradesh', 1),
+('Telangana', 1),
+('Madhya Pradesh', 1),
+('Jharkhand', 1),
+('Bihar', 1),
+('Beijing', 5),
+('Shanghai', 5),
+('Chengdu', 5),
+('Moskow', 4),
+('St. Petersburg', 4),
+('Sao Paulo', 3);
+
+--adding multi column unique key; also called composite unique constraint/key
+ALTER TABLE state
+ADD CONSTRAINT uk_state UNIQUE ([name], country_id) 
+
+SELECT * FROM STATE;
+
+-- city insertion
+INSERT INTO city
+VALUES
+('Mumbai', 1),
+('Thane', 1),
+('Panajim', 2),
+('Delhi', 4),
+('Bhopal', 10),
+('Hyderabad', 9);
+
+--adding multi column unique key; also called composite unique constraint/key
+ALTER TABLE city
+ADD CONSTRAINT uk_city UNIQUE ([name], state_id) 
+
+SELECT * from city
+
+
+
