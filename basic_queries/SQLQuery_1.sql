@@ -127,7 +127,55 @@ VALUES
 ALTER TABLE city
 ADD CONSTRAINT uk_city UNIQUE ([name], state_id) 
 
-SELECT * from city
+INSERT INTO city
+VALUES
+('Mumbai', 1) -- Violation of UNIQUE KEY constraint 'uk_city'. Cannot insert duplicate key in object 'dbo.city'. The duplicate key value is (Mumbai, 1).
+
+--inserting address
+
+INSERT INTO address 
+VALUES('address line 11', 'address line 12',  1),
+('address line 21', 'address line 22', 2),
+('address line 31', 'address line 32', 3),
+('address line 41', 'address line 42', 1),
+('address line 51', 'address line 52', 3),
+('address line 61', 'address line 62', 4),
+('address line 71', 'address line 72', 5),
+('address line 81', 'address line 82',6)
+
+select * from [address]
+
+
+--adding a new column to existing user table
+ALTER TABLE [user]
+ADD manager_id INT NULL
+
+--inserting users
+
+INSERT INTO [user]
+VALUES ('Kiran', 'Sarode', 1, 'kiran.sarode@xyz.com', '8087381830', 1, null),
+('Pradnya', 'Sarode', 1, 'p.sarode@xyz.com', '9087381830', 1, null)
+
+INSERT INTO [user]
+VALUES ('Suresh', 'Sarode', 1, 's.sarode@xyz.com', '7087381830', 1, 1),
+('Manda', 'Sarode', 1, 'm.sarode@xyz.com', '6087381830', 1, 2)
+
+INSERT INTO [user]
+VALUES 
+('Prakash', 'Patil', 1, 'p.patil@xyz.com', '5087381830', 1, 3),
+('Tapasya', 'Patil', 1, 'tp@xyz.com', '4087381830', 1, 1),
+('Darshan', 'Mali', 1, 'dm@xyz.com', '3087381830', 1, 2)
+
+
+select * from [user]
+
+--self join to check employee and their managers
+SELECT emp.id, emp.fname + ' ' + emp.lname as employee, mgr.id, mgr.fname + ' ' + mgr.lname as manager 
+FROM [user] emp
+    LEFT JOIN [user] mgr ON emp.manager_id = mgr.id
+
+
+
 
 
 
