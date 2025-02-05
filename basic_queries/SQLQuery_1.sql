@@ -166,16 +166,57 @@ VALUES
 ('Tapasya', 'Patil', 1, 'tp@xyz.com', '4087381830', 1, 1),
 ('Darshan', 'Mali', 1, 'dm@xyz.com', '3087381830', 1, 2)
 
-
 select * from [user]
+
+
+--JOINS
 
 --self join to check employee and their managers
 SELECT emp.id, emp.fname + ' ' + emp.lname as employee, mgr.id, mgr.fname + ' ' + mgr.lname as manager 
 FROM [user] emp
     LEFT JOIN [user] mgr ON emp.manager_id = mgr.id
 
+--full outer join of city and state
 
+INSERT INTO city
+VALUES
+('Djibuti', null)
 
+SELECT c.id as city_id, c.name as city_name, c.state_id as state_id_from_city, s.id as state_id_from_state, s.name as state_name
+FROM city c
+FULL OUTER JOIN [state] s on c.state_id = s.id
+ORDER BY c.id
+
+--left outer
+SELECT c.id as city_id, c.name as city_name, c.state_id as state_id_from_city, s.id as state_id_from_state, s.name as state_name
+FROM city c
+LEFT OUTER JOIN [state] s on c.state_id = s.id
+ORDER BY c.id
+
+--right outer
+SELECT c.id as city_id, c.name as city_name, c.state_id as state_id_from_city, s.id as state_id_from_state, s.name as state_name
+FROM city c
+RIGHT OUTER JOIN [state] s on c.state_id = s.id
+ORDER BY c.id
+
+--inner/equi/join
+SELECT c.id as city_id, c.name as city_name, c.state_id as state_id_from_city, s.id as state_id_from_state, s.name as state_name
+FROM city c
+JOIN [state] s on c.state_id = s.id
+ORDER BY c.id
+
+--cartesian product
+SELECT c.id as city_id, c.name as city_name, c.state_id as state_id_from_city, s.id as state_id_from_state, s.name as state_name
+FROM city c CROSS JOIN [state] s --on c.state_id = s.id
+--OR
+SELECT c.id as city_id, c.name as city_name, c.state_id as state_id_from_city, s.id as state_id_from_state, s.name as state_name
+FROM city c , [state] s --on c.state_id = s.id
+
+--natural join
+SELECT c.id as city_id, c.name as city_name, c.state_id as state_id_from_city, s.id as state_id_from_state, s.name as state_name
+FROM city c
+natural JOIN [state] s --this works only if both the tables have same column name i.e. state_id
+ORDER BY c.id
 
 
 
