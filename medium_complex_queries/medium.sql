@@ -400,3 +400,22 @@ with CTE AS
     where c.EndDate >= dateadd(day,1,c.ProjectDate)
 ) 
 select * from CTE Order by ProjectId 
+
+
+--19. Nth hightest salary
+use SqlPrepDB;
+
+select * from Employees
+
+select DENSE_RANK() over (order by salary desc), Salary from Employees; 
+
+select e.*
+FROM Employees e 
+where 5 = (
+    select COUNT(distinct ie.Salary)
+    from Employees ie
+    where ie.Salary < e.salary
+);
+
+
+
