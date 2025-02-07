@@ -312,3 +312,91 @@ Dept    Salary      Row_num     Rank    dense_rank
 3	    95000.00	2	        2	    2
 3	    350000.00	3	        3	    3
 */
+
+
+--17. Recurssive CTE to find employee hierarchy
+/*
+Use employee;
+
+CREATE TABLE Employees (
+    EmployeeID INT PRIMARY KEY,
+    EmployeeName NVARCHAR(100),
+    ManagerID INT NULL -- NULL means the employee is the top-level manager
+);
+
+INSERT INTO Employees (EmployeeID, EmployeeName, ManagerID)
+VALUES
+    (1, 'Alice', NULL),    -- CEO
+    (2, 'Bob', 1),         -- Reports to Alice
+    (3, 'Charlie', 1),     -- Reports to Alice
+    (4, 'David', 2),       -- Reports to Bob
+    (5, 'Eve', 2),         -- Reports to Bob
+    (6, 'Frank', 3),       -- Reports to Charlie
+    (7, 'Grace', 3);       -- Reports to Charlie
+*/
+
+select * from Employees;
+
+WITH EmployeeData AS
+(
+    --top employee having no manager
+    SELECT mgr.EmployeeID, mgr.EmployeeName, mgr.ManagerID, 1 as DesgLevel 
+    FROM Employees mgr 
+    WHERE mgr.ManagerID is Null
+    
+    UNION ALL
+    
+    --other employees having manager id from CTE recurssion data
+    SELECT emp.EmployeeID, emp.EmployeeName, emp.ManagerID, (ed.DesgLevel + 1) as DesgLevel 
+    FROM Employees emp
+    INNER JOIN EmployeeData ed ON emp.ManagerID = ed.EmployeeID 
+)
+select * from EmployeeData;
+
+
+--17. Recurssive CTE to calculate factorial of N number
+DECLARE @num INT = 6;
+
+WITH fact_data AS
+(
+    select @num as num, @num as ctr
+
+    UNION ALL
+
+    SELECT f.num * (f.ctr - 1) as num, f.ctr - 1  as ctr  
+    FROM fact_data f
+    where f.ctr > 1  
+)
+select top 1 num from fact_data ORDER by ctr
+
+
+--18.  Given a Projects table with a start and end date, generate all individual dates between the start and end for each project.
+/*
+CREATE TABLE Projects (
+    ProjectID INT PRIMARY KEY,
+    ProjectName NVARCHAR(100),
+    StartDate DATE,
+    EndDate DATE
+);
+
+INSERT INTO Projects (ProjectID, ProjectName, StartDate, EndDate)
+VALUES
+    (1, 'Project A', '2024-01-01', '2024-01-05'),
+    (2, 'Project B', '2024-02-10', '2024-02-12');
+
+*/
+
+select * from Projects
+
+with CTE AS
+(
+    select ProjectID, ProjectName, StartDate as ProjectDate, EndDate 
+    from Projects
+    
+    UNION ALL
+    
+    select c.ProjectID, c.ProjectName, dateadd(day,1,c.ProjectDate) as ProjectDate, c.EndDate 
+    from CTE c
+    where c.EndDate >= dateadd(day,1,c.ProjectDate)
+) 
+select * from CTE Order by ProjectId 
