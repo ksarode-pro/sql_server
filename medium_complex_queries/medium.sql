@@ -418,4 +418,19 @@ where 5 = (
 );
 
 
+--20. Fibonacci series using CTE
+--0,1,1,2,3,5,8,13,21,34,55
+
+declare @prev int = 0;
+declare @next int = 1;
+declare @term int = 10;
+with fibo as
+(
+    select @prev as prv, @next as nxt, @term as trm
+    UNION ALL
+    select f.nxt as prv, (f.prv + f.nxt) as nxt, (f.trm - 1) as trm 
+    from fibo f
+    where f.trm > 0
+)
+select * from fibo;
 
